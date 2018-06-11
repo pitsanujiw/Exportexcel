@@ -2,7 +2,7 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const app = express();
 var path = require('path');
-var XLSX = require('xlsx');
+var mongoXlsx = require('mongo-xlsx');
 var fs = require('fs');
 
 var server;
@@ -74,21 +74,6 @@ app.get('/xlsx', (req, res) => {
         }
     ]
 
-    var mongoXlsx = require('mongo-xlsx');
-
-    // var data = [{
-    //         name: "Peter",
-    //         lastName: "Parker",
-    //         isSpider: true
-    //     },
-    //     {
-    //         name: "Remy",
-    //         lastName: "LeBeau",
-    //         powers: ["kinetic cards"]
-    //     }
-    // ];
-
-    /* Generate automatic model for processing (A static model should be used) */
     models = [
         // {
         //     "displayName": "User Identifier",
@@ -125,32 +110,32 @@ app.get('/xlsx', (req, res) => {
             "access": "owner[firstName]",
             "type": "string"
         },
-        {
-            "displayName": "Last Name",
-            "access": "owner[lastName]",
-            "type": "string"
-        },
+        // {
+        //     "displayName": "Last Name",
+        //     "access": "owner[lastName]",
+        //     "type": "string"
+        // },
     ]
 
     var model = mongoXlsx.buildDynamicModel(data);
     var file = "TID" + Date.now();
-    var OUTPUT_XLSX_PATH = './files/';
+    var OUTPUT_XLSX_PATH = './files';
+
+    function checkFilesDir(filePath) {
+        let checkFiles = fs.existsSync(filePath);
+        if (checkFiles !== true)
+            fs.mkdirSync(filePath);
+    }
+    checkFilesDir(OUTPUT_XLSX_PATH);
     /* Generate Excel */
     mongoXlsx.mongoData2Xlsx(data, models, {
         fileName: file + ".xlsx",
         path: OUTPUT_XLSX_PATH
     }, function (err, data) {
-        console.log('File saved at:', data.fullPath);
+        console.log('File saved at:', data);
         res.download(data.fullPath);
     });
-    /* Read Excel */
-    mongoXlsx.xlsx2MongoData("./file.xlsx", models, function (err, mongoData) {
-        console.log('Mongo data:', mongoData);
-    });
 })
-
-
-
 
 app.get('/', (req, res) => {
     res.send('OK  test')

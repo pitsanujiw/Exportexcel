@@ -133,10 +133,15 @@ app.get('/xlsx', (req, res) => {
     ]
 
     var model = mongoXlsx.buildDynamicModel(data);
-
+    var file = "TID" + Date.now();
+    var OUTPUT_XLSX_PATH = './files/';
     /* Generate Excel */
-    mongoXlsx.mongoData2Xlsx(data, models, function (err, data) {
+    mongoXlsx.mongoData2Xlsx(data, models, {
+        fileName: file + ".xlsx",
+        path: OUTPUT_XLSX_PATH
+    }, function (err, data) {
         console.log('File saved at:', data.fullPath);
+        res.download(data.fullPath);
     });
     /* Read Excel */
     mongoXlsx.xlsx2MongoData("./file.xlsx", models, function (err, mongoData) {

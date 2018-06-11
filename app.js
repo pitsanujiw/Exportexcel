@@ -4,102 +4,149 @@ const app = express();
 var path = require('path');
 var XLSX = require('xlsx');
 var fs = require('fs');
-URL = require('url');
-var FileSave = require('file-saver');
 
 var server;
 app.get('/xlsx', (req, res) => {
-    var data = [
-        {
-            "id": 1,
-            "name": "Leanne Graham",
-            "username": "Bret",
-            "email": "Sincere@april.biz",
-            "address": {
-                "street": "Kulas Light",
-                "suite": "Apt. 556",
-                "city": "Gwenborough",
-                "zipcode": "92998-3874",
-                "geo": {
-                    "lat": "-37.3159",
-                    "lng": "81.1496"
-                }
-            },
-            "phone": "1-770-736-8031 x56442",
-            "website": "hildegard.org",
-            "company": {
-                "name": "Romaguera-Crona",
-                "catchPhrase": "Multi-layered client-server neural-net",
-                "bs": "harness real-time e-markets"
+    var data = [{
+            "ticketID": "TID1528277110235",
+            "createdAt": "06 06 2018 16:25:10",
+            "modifiedAt": "",
+            "status": 0,
+            "type": "Yoga (All Level) by K.Ning",
+            "DateType": "2018-04-02",
+            "owner": {
+                "employeeID": "8003986",
+                "firstName": "Kullapa",
+                "lastName": "Makarabhirom"
             }
         },
         {
-            "id": 2,
-            "name": "Ervin Howell",
-            "username": "Antonette",
-            "email": "Shanna@melissa.tv",
-            "address": {
-                "street": "Victor Plains",
-                "suite": "Suite 879",
-                "city": "Wisokyburgh",
-                "zipcode": "90566-7771",
-                "geo": {
-                    "lat": "-43.9509",
-                    "lng": "-34.4618"
-                }
-            },
-            "phone": "010-692-6593 x09125",
-            "website": "anastasia.net",
-            "company": {
-                "name": "Deckow-Crist",
-                "catchPhrase": "Proactive didactic contingency",
-                "bs": "synergize scalable supply-chains"
+            "ticketID": "TID1528277222666",
+            "createdAt": "06 06 2018 16:27:02",
+            "modifiedAt": "",
+            "status": 0,
+            "type": "bodyBalance (All Level) by K.Ning",
+            "DateType": "2018-04-02",
+            "owner": {
+                "employeeID": "8003986",
+                "firstName": "Kullapa",
+                "lastName": "Makarabhirom"
             }
         },
         {
-            "id": 3,
-            "name": "Clementine Bauch",
-            "username": "Samantha",
-            "email": "Nathan@yesenia.net",
-            "address": {
-                "street": "Douglas Extension",
-                "suite": "Suite 847",
-                "city": "McKenziehaven",
-                "zipcode": "59590-4157",
-                "geo": {
-                    "lat": "-68.6102",
-                    "lng": "-47.0653"
-                }
-            },
-            "phone": "1-463-123-4447",
-            "website": "ramiro.info",
-            "company": {
-                "name": "Romaguera-Jacobson",
-                "catchPhrase": "Face to face bifurcated interface",
-                "bs": "e-enable strategic applications"
+            "ticketID": "TID1528277238702",
+            "createdAt": "06 06 2018 16:27:18",
+            "modifiedAt": "",
+            "status": 0,
+            "type": "bodyBalance (All Level) by K.Ning",
+            "DateType": "2018-04-22",
+            "owner": {
+                "employeeID": "8003986",
+                "firstName": "Kullapa",
+                "lastName": "Makarabhirom"
+            }
+        },
+        {
+            "ticketID": "TID1528277259875",
+            "createdAt": "06 06 2018 16:27:39",
+            "modifiedAt": "",
+            "status": 0,
+            "type": "ZumbaDance (All Level) by K.Ning",
+            "DateType": "2018-04-02",
+            "owner": {
+                "employeeID": "8003986",
+                "firstName": "Kullapa",
+                "lastName": "Makarabhirom"
+            }
+        },
+        {
+            "ticketID": "TID1528341563854",
+            "createdAt": "07 06 2018 10:19:23",
+            "modifiedAt": "",
+            "status": 0,
+            "type": "Yoga (All Level) by K.Ning",
+            "DateType": "2018-04-22",
+            "owner": {
+                "employeeID": "6068132",
+                "firstName": "Pitsanu",
+                "lastName": "Limpanachaiphonkul"
             }
         }
-    ];
-    // var wb = xlsx.utils.book_new();
-    // var excelconvert = xlsx.utils.json_to_sheet(data);
+    ]
 
-    var ws = XLSX.utils.json_to_sheet(data);
-    var wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-    // var workbook = xlsx.utils.book_append_sheet(wb, excelconvert, 'Hello')
-    // var dataExcel = xlsx.writeFile(workbook, 'test.xlsx', {
-    //     type: "file"
-    // })
-    // res.send(data)
-    var excel = XLSX.writeFile(wb, 'TESTERs.xlsx')
-    res.download('TEST.xlsx')
-    //  saveAs(new Blob([excel],{type:"application/octet-stream"}), "test.xlsx");
-    // res.status(200).download(excel)
+    var mongoXlsx = require('mongo-xlsx');
 
+    // var data = [{
+    //         name: "Peter",
+    //         lastName: "Parker",
+    //         isSpider: true
+    //     },
+    //     {
+    //         name: "Remy",
+    //         lastName: "LeBeau",
+    //         powers: ["kinetic cards"]
+    //     }
+    // ];
 
-    // var stream = XLSX.stream.to_csv(excelconvert);
-    // stream.pipe(fs.createWriteStream('output_file_name'));
+    /* Generate automatic model for processing (A static model should be used) */
+    models = [
+        // {
+        //     "displayName": "User Identifier",
+        //     "access": "_id",
+        //     "type": "string"
+        // },
+        {
+            "displayName": "TicketID",
+            "access": "ticketID",
+            "type": "string"
+        },
+        {
+            "displayName": "Created",
+            "access": "createdAt",
+            "type": "string"
+        },
+        {
+            "displayName": "Approved DATE",
+            "access": "modifiedAt",
+            "type": "string"
+        },
+        {
+            "displayName": "Status",
+            "access": "status",
+            "type": "number"
+        },
+        {
+            "displayName": "Employee ID",
+            "access": "owner[employeeID]",
+            "type": "string"
+        },
+        {
+            "displayName": "First Name",
+            "access": "owner[firstName]",
+            "type": "string"
+        },
+        {
+            "displayName": "Last Name",
+            "access": "owner[lastName]",
+            "type": "string"
+        },
+    ]
+
+    var model = mongoXlsx.buildDynamicModel(data);
+
+    /* Generate Excel */
+    mongoXlsx.mongoData2Xlsx(data, models, function (err, data) {
+        console.log('File saved at:', data.fullPath);
+    });
+    /* Read Excel */
+    mongoXlsx.xlsx2MongoData("./file.xlsx", models, function (err, mongoData) {
+        console.log('Mongo data:', mongoData);
+    });
 })
+
+
+
+
 app.get('/', (req, res) => {
     res.send('OK  test')
 })
